@@ -4,13 +4,13 @@
 }
  */
 
-/* output "expanded_names" {
+output "expanded_names" {
   value = local.expanded_names
 }
 
 output "counting" {
   value = local.counting
-} */
+}
 
 
 /* output "key_vault_id_russ" {
@@ -23,7 +23,7 @@ output "counting" {
 /* output "keyvault_id" {
   value = [for keyvaultresource in data.azurerm_key_vault.keyvault : keyvaultresource.id]
 } */
-/* 
+
 output "datadisk_lun_map" {
   value = local.datadisk_lun_map
 }
@@ -40,7 +40,7 @@ output "workingdatadisk_lun_maplist" {
 output "datadisk_count_map" {
   value = local.datadisk_count_map
 
-} */
+}
 
 
 /* output "Frontend_Address" {
