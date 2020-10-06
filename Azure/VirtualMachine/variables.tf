@@ -4,16 +4,18 @@
 
 // Required Variables
 
-variable "location" {
+
+ variable "location" {
   description = "The Azure location of the virtual machine"
-}
+} 
 
 variable "resourcegroupname" {
   description = "The Resource Group Name"
 }
 
 variable "admin_password" {
-  description = "This is the Administrator's Password. Use If you are not storing the password in a key vault. This should only be used for testing."
+  description = "This is the Administrator's Password. Use If you are not storing the password in a key vault."
+  default = "PassWORD@123"
 }
 
 
@@ -56,7 +58,6 @@ variable "key_vault" {
   type = map(object({
       key_vault_resource_group  = string
       key_vault_name            = string
-      key_vault_secret_username = string
       key_vault_secret_password = string
   }))
     description = "Existing Key Vault Settings"
@@ -64,14 +65,14 @@ variable "key_vault" {
   
     }
 }
-variable "keyvault_secret_username" {
+/* variable "keyvault_secret_username" {
     description = "The secret name of the administrators username"
     default     = ["Default-Admin-VM-Username"]
 }
 variable "keyvault_secret_password" {
     description = "Description"
     default     = ["Default-Admin-VM-Password"]
-}
+} */
 
 
 // end of key vault variables
@@ -80,7 +81,7 @@ variable "keyvault_secret_password" {
 
 // ##########################
 // Start of Network variables
-variable "network_subnet_Frontend_name" {
+variable "network_subnet_name" {
     description = "Description"
     default     = "Frontend"
 }

@@ -21,12 +21,6 @@ data "azurerm_key_vault" "keyvault" {
   resource_group_name = each.value["key_vault_resource_group"]
 }
 
-data "azurerm_key_vault_secret" "secret_Default-Admin-VM-Username" {
-  for_each     = var.key_vault
-  name         = each.value["key_vault_secret_username"]
-  key_vault_id = data.azurerm_key_vault.keyvault[each.key].id
-}
-
 data "azurerm_key_vault_secret" "secret_Default-Admin-VM-Password" {
   for_each     = var.key_vault
   name         = each.value["key_vault_secret_password"]
@@ -44,14 +38,14 @@ data "azurerm_key_vault_secret" "secret_Default-Admin-VM-Password" {
 resource "azurerm_virtual_network" "main" {
   name                = "${var.resourcegroupname}-network"
   address_space       = local.lcidr
-  location            = var.location // azurerm_resource_group.main.location
-  resource_group_name = var.resourcegroupname // azurerm_resource_group.main.name
+  location            = var.location 
+  resource_group_name = var.resourcegroupname  
   tags                = var.taglist
 }
 
-resource "azurerm_subnet" "Frontend" {
-  name                 = var.network_subnet_Frontend_name
-  resource_group_name  = var.resourcegroupname // azurerm_resource_group.main.name
+resource "azurerm_subnet" "main" {
+  name                 = var.network_subnet_name
+  resource_group_name  = var.resourcegroupname 
   virtual_network_name = azurerm_virtual_network.main.name
   address_prefixes     = [cidrsubnet(local.lcidr[0], 8, 1)]
 
@@ -68,12 +62,12 @@ resource "azurerm_subnet" "Frontend" {
 resource "azurerm_network_interface" "main" {
   for_each            = toset(local.counting)
   name                = "${each.key}-NIC"
-  location            = var.location // azurerm_resource_group.main.location
-  resource_group_name = var.resourcegroupname // azurerm_resource_group.main.name
+  location            = var.location 
+  resource_group_name = var.resourcegroupname  
 
   ip_configuration {
     name                          = "configuration"
-    subnet_id                     = azurerm_subnet.Frontend.id
+    subnet_id                     = azurerm_subnet.main.id
     private_ip_address_allocation = "Dynamic"
     public_ip_address_id          = azurerm_public_ip.main[each.key].id
   }
@@ -106,7 +100,7 @@ resource "azurerm_windows_virtual_machine" "windows" {
   size                = var.vmsize
   eviction_policy     = var.priority == "Spot" ? var.eviction_policy : null
   priority            = var.priority
-  admin_username      = length(var.key_vault) == 0 ? var.admin_username : element([for keyvaultusername in data.azurerm_key_vault_secret.secret_Default-Admin-VM-Username : keyvaultusername.value], 0)
+  admin_username      = var.admin_username
   admin_password      = length(var.key_vault) == 0 ? var.admin_password : element([for keyvaultpassword in data.azurerm_key_vault_secret.secret_Default-Admin-VM-Password : keyvaultpassword.value], 0)
   network_interface_ids = [
     azurerm_network_interface.main[each.key].id,
@@ -357,3 +351,4 @@ resource "azurerm_virtual_machine_extension" "DSCService" {
 
 // End of Virtual Machine DSC Service Extension resource
 // #####################################################
+
