@@ -23,7 +23,7 @@ If you would like to
 Paste the links to your sample code in `examples` folder.
 
 ## Inputs
-
+``` Terraform
 
 // Required Variables
 
@@ -214,7 +214,7 @@ DSCServiceExt_AllowModuleOverwrite              = true
 // ######################################
 
 
-
+```
 
 
 
