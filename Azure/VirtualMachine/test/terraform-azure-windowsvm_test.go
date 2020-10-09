@@ -45,7 +45,7 @@ func TestWindowsvm(t *testing.T) {
 
 	vmname := "foo00"
 	resourcegroup := "DeathRace"
-	subscriptionID := "206c6b04-b170-42cf-ab78-0703dbd83bdc"
+	
 
 	testvmsize := GetSizeOfVirtualMachine(t, vmanme, resourcegroup, subscriptionID)
 
