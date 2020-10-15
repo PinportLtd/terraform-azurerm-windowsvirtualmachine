@@ -4,5 +4,5 @@ provider "azurerm" {
 
 resource "azurerm_resource_group" "rg" {
   location = var.location
-  name     = "tf-ref-${var.environment}-rg"
+  name     = var.rg
 }

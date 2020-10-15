@@ -4,6 +4,11 @@ output "vm_names" {
   value = local.counting
 }
 
+output "resourcegroup" {
+  description = "The name of the resource group"
+  value = [for rg in azurerm_windows_virtual_machine.windows : rg.resource_group_name]
+}
+
 output "datadisk_lun_map" {
   description = "A map of the datadisks and the luns number"
   value = local.datadisk_lun_map

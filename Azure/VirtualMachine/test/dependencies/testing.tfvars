@@ -1,2 +1,2 @@
-environment        = "test"
+rg        = "deathrace"
 location           = "uksouth"

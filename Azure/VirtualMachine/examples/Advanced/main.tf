@@ -52,7 +52,7 @@ module "vmwindows" {
   // enable the custom script extension and set the variables.
   enableCustomScriptextension      = true
   CustomScriptExt_commandToExecute = "powershell.exe -Command ./chocolatey.ps1; exit 0;"
-  CustomScriptExt_filesUris        = "https://gist.githubusercontent.com/mcasperson/c815ac880df481418ff2e199ea1d0a46/raw/5d4fc583b28ecb27807d8ba90ec5f636387b00a3/chocolatey.ps1"
+  CustomScriptExt_filesUris        = "https://gist.githubusercontent.com/Russtym/29dd88d6b14af89a715646c73bd03c38/raw/61e9b904164a69344364976159b34f2a66f3b6ad/installchocolatey.ps1"
 
   // enable the DSCScript extension and set the variables.
   enableDSCScriptextension              = true

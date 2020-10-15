@@ -1,55 +1,102 @@
-package TestWindowsvm
+package testwindowsvm
 
 import (
 	"fmt"
-	"testing"
+	"github.com/Azure/azure-sdk-for-go/services/compute/mgmt/2019-07-01/compute"
 	"github.com/gruntwork-io/terratest/modules/azure"
 	"github.com/gruntwork-io/terratest/modules/terraform"
-	"github.com/hashicorp/terraform/communicator/winrm"
 	"github.com/stretchr/testify/assert"
-	
+	"testing"
+	//"reflect"
+	"strings"
 )
 
 func TestWindowsvm(t *testing.T) {
+
+	// Run tests in Parrallel
 	t.Parallel()
 
-	dependenciesopts := $terraform.Options{
+	// Setup the infrastructure dependencies paths and variables
+	depOpts := &terraform.Options{
 		TerraformDir: "./dependencies",
-		VarFiles: [string]{"testing.tfvars"},
+		VarFiles:     []string{"testing.tfvars"},
 	}
 
-	defer terraform.Destroy(t, dependenciesopts)
-	terraform.InitAndApply(t, dependenciesopts)
+	// Equivalent of running Terraform destroy for dependenciesopts
+	defer terraform.Destroy(t, depOpts)
 
+	// Equivalent of running Terraform init, Terraform apply for dependenciesopts
+	terraform.InitAndApply(t, depOpts)
 
+	// Setup the infrastructure paths and variables
 	opts := &terraform.Options{
 		TerraformDir: "./fixture",
-		VarFiles: [string]{"testing.tfvars"},
 	}
 
-
+	// Equivalent of running Terraform Destroy for opts
 	defer terraform.Destroy(t, opts)
+
+	//Equivalent of running Terraform init, Terraform apply for opts
 	terraform.InitAndApply(t, opts)
 
+	// Setting Variables
+	vmNameList := terraform.Output(t, opts, "vm_names")
+	resourceGroupList := terraform.Output(t, opts, "resourcegroup")
+	// Tidy up outputs
 
-	// Clean up everything at the end of the test
-	defer terraform.Destroy(t, opts)
-	// Deploy the Infra
-	terraform.InitAndApply(t, opts)
+	replacer := strings.NewReplacer(" ", "", "[", "", "]", "", "\"", "", ",", "")
 
-	// get the DNS name of the machine
-	vmDNSName := terraform.OutputRequired(t, opts, "fqdn")
+	resourceGroupList = replacer.Replace(resourceGroupList)
+	resourceGroupList = strings.TrimSpace(resourceGroupList)
 
-	url	:= fmt.Sprintf("http://%s", vmDNSName)
-	fmt.Printf("This should be the URL%s.\n", url)
+	vmNameList = replacer.Replace(vmNameList)
+	vmNameList = strings.TrimSpace(vmNameList)
 
-	vmname := "foo00"
-	resourcegroup := "DeathRace"
-	
+	vmNames := strings.Fields(vmNameList)
 
-	testvmsize := GetSizeOfVirtualMachine(t, vmanme, resourcegroup, subscriptionID)
+	resourceGroups := strings.Fields(resourceGroupList)
+	resourceGroups = uniqueNonEmptyElementsOf(resourceGroups)
 
-	fmt.Println("This will hopefully be the size of the VM", testvmsize)
-	
+	fmt.Println("Resource Group: ", resourceGroups)
+
+	for _, resourceGroup := range resourceGroups {
+		fmt.Println("ResourceGroup: ", resourceGroup)
+
+		// Check the size of the Virtual Machine
+		for _, vmName := range vmNames {
+			fmt.Println("Virtual Machine: ", vmName)
+			testVMSize := azure.GetSizeOfVirtualMachine(t, vmName, resourceGroup, "")
+			expectedVMSize := compute.VirtualMachineSizeTypes("Standard_B2ms")
+			fmt.Println("The Size of the Virtual Machine is as it should be as expected: ", assert.Equal(t, expectedVMSize, testVMSize))
+
+			// Check that it's got a Public IP assigned.
+			var checkItsGotPip bool
+			checkItsGotPip = azure.PublicAddressExists(t, (vmName + "-PIP"), resourceGroup, "")
+			fmt.Println("Checking if a Public IP has been assigned to the VM: ", assert.Equal(t, true, checkItsGotPip))
+
+			// Get the Public IP address checks if it exists.
+			getIPAddress := azure.GetIPOfPublicIPAddressByName(t, (vmName + "-PIP"), resourceGroup, "")
+			fmt.Println("This is the Public IP address ", getIPAddress)
+			fmt.Println("Checking what is the IP Address of the Virtual Machine: ", assert.NotEmpty(t, getIPAddress))
+
+		}
+
+	}
+
 }
 
+func uniqueNonEmptyElementsOf(s []string) []string {
+	unique := make(map[string]bool, len(s))
+	us := make([]string, len(unique))
+	for _, elem := range s {
+		if len(elem) != 0 {
+			if !unique[elem] {
+				us = append(us, elem)
+				unique[elem] = true
+			}
+		}
+	}
+
+	return us
+
+}

@@ -4,6 +4,11 @@ output "vm_names" {
   value       = module.vmwindows.vm_names
 }
 
+output "resourcegroup" {
+  description = "The name of the resource group."
+  value       = module.vmwindows.resourcegroup
+}
+
 output "datadisk_count_map" {
   description = "A map of the number of disk per vm."
   value       = module.vmwindows.datadisk_count_map

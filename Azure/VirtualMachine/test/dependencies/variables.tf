@@ -1,5 +1,5 @@
-variable "environment" {
-  description = "Name of the environment"
+variable "rg" {
+  description = "rg"
 }
 
 variable "location" {
