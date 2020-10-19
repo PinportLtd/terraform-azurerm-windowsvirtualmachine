@@ -1,0 +1,55 @@
+FROM golang:latest AS base
+
+
+# Define environment variables
+ARG BUILD_TERRAFORM_VERSION="0.13.3"
+ARG BUILD_TERRAFORM_OS_ARCH=linux_amd64
+ARG BUILD_TERRATEST_LOG_PARSER_VERSION="v0.23.0"
+
+# Declare default build configurations for terraform.
+ARG BUILD_ARM_SUBSCRIPTION_ID=""
+ARG BUILD_ARM_CLIENT_ID=""
+ARG BUILD_ARM_CLIENT_SECRET=""
+ARG BUILD_ARM_TENANT_ID=""
+ARG BUILD_ARM_TEST_LOCATION="uksouth"
+
+# Set environment variables for terraform runtime.
+ENV ARM_SUBSCRIPTION_ID=${BUILD_ARM_SUBSCRIPTION_ID}
+ENV ARM_CLIENT_ID=${BUILD_ARM_CLIENT_ID}
+ENV ARM_CLIENT_SECRET=${BUILD_ARM_CLIENT_SECRET}
+ENV ARM_TENANT_ID=${BUILD_ARM_TENANT_ID}
+ENV ARM_TEST_LOCATION=${BUILD_ARM_TEST_LOCATION}
+
+ENV TERRAFORM_VERSION=${BUILD_TERRAFORM_VERSION}
+ENV TERRAFORM_OS_ARCH=${BUILD_TERRAFORM_OS_ARCH}
+ENV TERRATEST_LOG_PARSER_VERSION=${BUILD_TERRATEST_LOG_PARSER_VERSION}
+
+
+# Set work directory.
+WORKDIR /go/src/app
+# COPY . /go/src/app
+
+# Update & Install tool
+RUN apt-get update && \
+    apt-get install -y build-essential unzip 
+
+    # Install Terraform
+RUN curl -Os https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_${TERRAFORM_OS_ARCH}.zip && \
+    curl -Os https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_SHA256SUMS && \
+    curl -s https://keybase.io/hashicorp/pgp_keys.asc | gpg --import && \
+    curl -Os https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_SHA256SUMS.sig && \
+    gpg --verify terraform_${TERRAFORM_VERSION}_SHA256SUMS.sig terraform_${TERRAFORM_VERSION}_SHA256SUMS && \
+    shasum -a 256 -c terraform_${TERRAFORM_VERSION}_SHA256SUMS 2>&1 | grep "${TERRAFORM_VERSION}_${TERRAFORM_OS_ARCH}.zip:\sOK" && \
+    unzip -o terraform_${TERRAFORM_VERSION}_${TERRAFORM_OS_ARCH}.zip -d /usr/local/bin
+
+# Cleanup
+RUN rm terraform_${TERRAFORM_VERSION}_${TERRAFORM_OS_ARCH}.zip
+RUN rm terraform_${TERRAFORM_VERSION}_SHA256SUMS
+RUN rm terraform_${TERRAFORM_VERSION}_SHA256SUMS.sig
+
+# Install Terratest Log Parser
+RUN curl -OLs https://github.com/gruntwork-io/terratest/releases/download/${TERRATEST_LOG_PARSER_VERSION}/terratest_log_parser_${TERRAFORM_OS_ARCH} && \
+    chmod +x terratest_log_parser_${TERRAFORM_OS_ARCH} && \
+    mv terratest_log_parser_${TERRAFORM_OS_ARCH} /usr/local/bin/terratest_log_parser
+
+
