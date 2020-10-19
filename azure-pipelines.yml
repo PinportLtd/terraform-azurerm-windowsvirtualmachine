@@ -10,7 +10,7 @@ resources:
   containers:
   - container: 'golangtesting'
     image: pinport.azurecr.io/pinport
-    connection: acr_pinport
+    endpoint: acr_pinport
 
 variables:
   tag: '$(Build.BuildId)'
