@@ -34,5 +34,26 @@ stages:
         dockerfile: $(dockerfilepath)
         tags: |
           $(tag)
-
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: |
+            mkdir ./test_output
+            docker run \
+              -e SERVICE_PRINCIPAL_CLIENT_ID=$(SERVICE_PRINCIPAL_CLIENT_ID) \
+              -e SERVICE_PRINCIPAL_CLIENT_SECRET=$(SERVICE_PRINCIPAL_CLIENT_SECRET) \
+              -e ARM_SUBSCRIPTION_ID=$(ARM_SUBSCRIPTION_ID) \
+              -e ARM_CLIENT_ID=$(ARM_CLIENT_ID) \
+              -e ARM_CLIENT_SECRET=$(ARM_CLIENT_SECRET) \
+              -e ARM_TENANT_ID=$(ARM_TENANT_ID) \
+              -v $(System.DefaultWorkingDirectory)/test_output:/go/src/aks-module/test_output \
+              $(containerRegistry)/$(imageRepository):$(tag)
+      displayName: Run tests in container
+      env:
+        SERVICE_PRINCIPAL_CLIENT_ID: $(SERVICE_PRINCIPAL_CLIENT_ID)
+        SERVICE_PRINCIPAL_CLIENT_SECRET: $(SERVICE_PRINCIPAL_CLIENT_SECRET)
+        ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+        ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+        ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+        ARM_TENANT_ID: $(ARM_TENANT_ID)
 
