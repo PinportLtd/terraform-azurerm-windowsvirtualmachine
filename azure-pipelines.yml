@@ -5,12 +5,12 @@
 trigger:
 - master
 
-resources:
-  - repo: self
+# - repo: self
+resources:  
   containers:
   - container: 'golangtesting'
-    image: pinport.azurecr.io/pinport:$(tag)
-    endpoint: acr_pinport
+    image: pinport.azurecr.io/pinport
+    connection: acr_pinport
 
 variables:
   tag: '$(Build.BuildId)'
