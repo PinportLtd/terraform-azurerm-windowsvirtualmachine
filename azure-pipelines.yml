@@ -15,6 +15,9 @@ variables:
   imageRepository: 'golangtesting'
   containerRegistry: 'pinport.azurecr.io'
   dockerfilepath: '$(Build.SourcesDirectory)/Azure/VirtualMachine/Dockerfile'
+  ARM_SUBSCRIPTION_ID: '206c6b04-b170-42cf-ab78-0703dbd83bdc'
+  ARM_CLIENT_ID: '4b565304-99d0-4d41-8759-4b995e042f43'
+  ARM_TENANT_ID: '7f429a9a-bd6a-4c3d-ac35-a100bd4644c8'
 
 stages:
 - stage: Build
@@ -40,20 +43,16 @@ stages:
         script: |
             mkdir ./test_output
             docker run \
-              -e SERVICE_PRINCIPAL_CLIENT_ID=$(SERVICE_PRINCIPAL_CLIENT_ID) \
-              -e SERVICE_PRINCIPAL_CLIENT_SECRET=$(SERVICE_PRINCIPAL_CLIENT_SECRET) \
               -e ARM_SUBSCRIPTION_ID=$(ARM_SUBSCRIPTION_ID) \
               -e ARM_CLIENT_ID=$(ARM_CLIENT_ID) \
-              -e ARM_CLIENT_SECRET=$(ARM_CLIENT_SECRET) \
+              -e ARM_CLIENT_SECRET=$(clientsecret) \
               -e ARM_TENANT_ID=$(ARM_TENANT_ID) \
-              -v $(System.DefaultWorkingDirectory)/test_output:/go/src/aks-module/test_output \
+              -v $(System.DefaultWorkingDirectory)/test_output:/go/src/windowsvm/test_output \
               $(containerRegistry)/$(imageRepository):$(tag)
       displayName: Run tests in container
       env:
-        SERVICE_PRINCIPAL_CLIENT_ID: $(SERVICE_PRINCIPAL_CLIENT_ID)
-        SERVICE_PRINCIPAL_CLIENT_SECRET: $(SERVICE_PRINCIPAL_CLIENT_SECRET)
         ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
         ARM_CLIENT_ID: $(ARM_CLIENT_ID)
-        ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+        ARM_CLIENT_SECRET: $(clientsecret)
         ARM_TENANT_ID: $(ARM_TENANT_ID)
 
