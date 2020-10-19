@@ -10,9 +10,10 @@ resources:
 
 variables:
   tag: '$(Build.BuildId)'
-  subid: 206c6b04-b170-42cf-ab78-0703dbd83bdc
-  tenantid: 7f429a9a-bd6a-4c3d-ac35-a100bd4644c8  
-  clientapp: 4b565304-99d0-4d41-8759-4b995e042f43
+  dockerRegistryServiceConnection: "acr_pinport"
+  imageRepository: 'golangtesting'
+  containerRegistry: 'pinport.azurecr.io'
+  dockerfilepath: '$(Build.SourcesDirectory)/Azure/VirtualMachine/Dockerfile'
 
 stages:
 - stage: Build
@@ -27,8 +28,9 @@ stages:
       displayName: Build an image
       inputs:
         command: build
-        dockerfile: '$(Build.SourcesDirectory)/Azure/VirtualMachine/Dockerfile'
-        arguments: --build-arg BUILD_ARM_SUBSCRIPTION_ID="$(subid)" BUILD_ARM_CLIENT_ID="$(clientapp)" BUILD_ARM_CLIENT_SECRET="$(clientsecret)" BUILD_ARM_TENANT_ID="$(tenantid)"
+        repository: $(imageRepository)
+        containerRegistry: $(dockerRegistryServiceConnection)
+        dockerfile: $(dockerfilepath)
         tags: |
           $(tag)
 
