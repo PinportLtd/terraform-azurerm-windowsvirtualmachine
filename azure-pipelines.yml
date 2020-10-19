@@ -28,7 +28,7 @@ stages:
       inputs:
         command: build
         dockerfile: '$(Build.SourcesDirectory)/Azure/VirtualMachine/Dockerfile'
-        arguments: BUILD_ARM_SUBSCRIPTION_ID="$(subid)" BUILD_ARM_CLIENT_ID="$(clientapp)" BUILD_ARM_CLIENT_SECRET="$(clientsecret)" BUILD_ARM_TENANT_ID="$(tenantid)"
+        arguments: --build-arg BUILD_ARM_SUBSCRIPTION_ID="$(subid)" BUILD_ARM_CLIENT_ID="$(clientapp)" BUILD_ARM_CLIENT_SECRET="$(clientsecret)" BUILD_ARM_TENANT_ID="$(tenantid)"
         tags: |
           $(tag)
 
