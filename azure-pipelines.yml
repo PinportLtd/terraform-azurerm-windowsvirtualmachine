@@ -5,18 +5,15 @@
 trigger:
 - master
 
-# - repo: self
+
 resources:  
-  containers:
-  - container: 'golangtesting'
-    image: pinport.azurecr.io/pinport
-    endpoint: acr_pinport
+ - repo: self
 
 variables:
   tag: '$(Build.BuildId)'
- # dockerRegistryServiceConnection: "acr_pinport"
- # imageRepository: 'golangtesting'
- # containerRegistry: 'pinport.azurecr.io'
+  dockerRegistryServiceConnection: "acr_pinport"
+  imageRepository: 'golangtesting'
+  containerRegistry: 'pinport.azurecr.io'
   dockerfilepath: '$(Build.SourcesDirectory)/Azure/VirtualMachine/Dockerfile'
 
 stages:
@@ -32,8 +29,8 @@ stages:
       displayName: Build an image
       inputs:
         command: build
-  #      repository: $(imageRepository)
-  #      containerRegistry: $(dockerRegistryServiceConnection)
+        repository: $(imageRepository)
+        containerRegistry: $(dockerRegistryServiceConnection)
         dockerfile: $(dockerfilepath)
         tags: |
           $(tag)
