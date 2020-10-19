@@ -1,4 +1,4 @@
-FROM russtym/pinport:latest
+FROM pinport.azurecr.io/golangtesting:latest
 
 ARG BUILD_MODULE_NAME="windowsvm"
 ENV MODULE_NAME=${BUILD_MODULE_NAME}
