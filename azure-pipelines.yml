@@ -28,8 +28,8 @@ stages:
       displayName: Build an image
       inputs:
         command: build
-        repository: $(imageRepository)
-        containerRegistry: $(dockerRegistryServiceConnection)
+#        repository: $(imageRepository)
+#        containerRegistry: $(dockerRegistryServiceConnection)
         dockerfile: $(dockerfilepath)
         tags: |
           $(tag)
