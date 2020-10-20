@@ -5,8 +5,8 @@ set -e
 # ensure dependencies
 #dep ensure
 cd ./test/
-go mod init github.com/PinportLtd/TerraformModules
-go mod vendor
+# go mod init github.com/PinportLtd/TerraformModules
+# go mod vendor
 # set environment variables
 # export TF_VAR_service_principal_client_id=$SERVICE_PRINCIPAL_CLIENT_ID
 # export TF_VAR_service_principal_client_secret=$SERVICE_PRINCIPAL_CLIENT_SECRET
