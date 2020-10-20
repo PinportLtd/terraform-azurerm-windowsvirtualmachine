@@ -32,7 +32,7 @@ stages:
       displayName: Build an image
       inputs:
         command: build
-        repository: 'Rob'
+        repository: 'rob'
         containerRegistry: $(containerRegistry)
         dockerfile: $(dockerfile)
         tags: |
@@ -48,7 +48,7 @@ stages:
               -e ARM_CLIENT_SECRET=$(clientsecret) \
               -e ARM_TENANT_ID=$(ARM_TENANT_ID) \
               -v $(System.DefaultWorkingDirectory)/test_output:/go/src/windowsvm/test_output \
-              $(azurecontainerRegistry)/Rob:$(tag)
+              $(azurecontainerRegistry)/rob:$(tag)
       displayName: Run tests in container
       env:
         ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
