@@ -56,3 +56,8 @@ stages:
         ARM_CLIENT_SECRET: $(clientsecret)
         ARM_TENANT_ID: $(ARM_TENANT_ID)
 
+    - task: PublishTestResults@2
+      inputs:
+        testResultsFormat: 'JUnit' # Options: JUnit, NUnit, VSTest, xUnit, cTest
+        testResultsFiles: '**/report.xml'
+        failTaskOnFailedTests: true
