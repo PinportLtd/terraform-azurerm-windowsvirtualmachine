@@ -12,7 +12,7 @@ resources:
 variables:
   tag: '$(Build.BuildId)'
   dockerRegistryServiceConnection: "acr_pinport"
-  imageRepository: 'golangtesting'
+  imageRepository: 'golangtesting2'
   containerRegistry: 'pinport.azurecr.io'
   dockerfilepath: '$(Build.SourcesDirectory)/Azure/VirtualMachine/Dockerfile'
   ARM_SUBSCRIPTION_ID: '206c6b04-b170-42cf-ab78-0703dbd83bdc'
