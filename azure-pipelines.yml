@@ -47,7 +47,7 @@ stages:
               -e ARM_CLIENT_SECRET=$(clientsecret) \
               -e ARM_TENANT_ID=$(ARM_TENANT_ID) \
               -v $(System.DefaultWorkingDirectory)/test_output:/go/src/windowsvm/test_output \
-              $(containerRegistry)/$(imageRepository):$(tag)
+              $(containerRegistry)/$(Repository):$(tag)
       displayName: Run tests in container
       env:
         ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
