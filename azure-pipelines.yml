@@ -13,6 +13,7 @@ variables:
   tag: '$(Build.BuildId)'
   containerRegistry: "acr_pinport"
   Repository: 'golangtesting'
+  usercontainerRegistry: 'pinport.azurecr.io'
   dockerfile: '$(Build.SourcesDirectory)/Azure/VirtualMachine/Dockerfile'
   ARM_SUBSCRIPTION_ID: '206c6b04-b170-42cf-ab78-0703dbd83bdc'
   ARM_CLIENT_ID: '4b565304-99d0-4d41-8759-4b995e042f43'
@@ -47,7 +48,7 @@ stages:
               -e ARM_CLIENT_SECRET=$(clientsecret) \
               -e ARM_TENANT_ID=$(ARM_TENANT_ID) \
               -v $(System.DefaultWorkingDirectory)/test_output:/go/src/windowsvm/test_output \
-              $(containerRegistry)/$(Repository):$(tag)
+              $(azurecontainerRegistry)/$(Repository):$(tag)
       displayName: Run tests in container
       env:
         ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
