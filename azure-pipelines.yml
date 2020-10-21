@@ -38,18 +38,22 @@ stages:
         tags: |
           $(tag)
     - task: Bash@3
+      displayName: mkdir
       inputs:
         targetType: 'inline'
         script: 'mkdir ./test_output'
     - task: PowerShell@2
+      displayName: gci
       inputs:
         targetType: 'inline'
         script: 'gci . -r'
     - task: PowerShell@2
+      displayName: docker images
       inputs:
         targetType: 'inline'
         script: 'docker images'
     - task: PowerShell@2
+      displayName: docker ps -a
       inputs:
         targetType: 'inline'
         script: 'docker ps -a'
@@ -70,9 +74,13 @@ stages:
         ARM_CLIENT_ID: $(ARM_CLIENT_ID)
         ARM_CLIENT_SECRET: $(clientsecret)
         ARM_TENANT_ID: $(ARM_TENANT_ID)
-
-    # - task: PublishTestResults@2
-    #   inputs:
-    #     testResultsFormat: 'JUnit' # Options: JUnit, NUnit, VSTest, xUnit, cTest
-    #     testResultsFiles: '**/report.xml'
-    #     failTaskOnFailedTests: true
+    - task: Bash@3
+      displayName: whatsgoingon
+      inputs:
+        targetType: 'inline'
+        script: 'ls -s'
+    - task: PublishTestResults@2
+      inputs:
+        testResultsFormat: 'JUnit' # Options: JUnit, NUnit, VSTest, xUnit, cTest
+        testResultsFiles: '**/report.xml'
+        failTaskOnFailedTests: true
