@@ -42,11 +42,11 @@ stages:
       inputs:
         targetType: 'inline'
         script: 'mkdir ./test_output'
-    - task: PowerShell@2
-      displayName: gci
-      inputs:
-        targetType: 'inline'
-        script: 'gci . -r'
+    # - task: PowerShell@2
+    #   displayName: gci
+    #   inputs:
+    #     targetType: 'inline'
+    #     script: 'gci . -r'
     - task: PowerShell@2
       displayName: docker images
       inputs:
