@@ -48,11 +48,6 @@ stages:
       inputs:
         targetType: 'inline'
         script: 'terraform fmt -check -recursive'
-    - task: TerraformCLI@0
-      displayName: Check code is valid
-      inputs:
-        command: 'validate'
-        allowTelemetryCollection: true
 
 - stage: Build
   displayName: Build image
