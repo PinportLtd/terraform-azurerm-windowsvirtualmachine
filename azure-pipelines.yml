@@ -20,6 +20,32 @@ variables:
   ARM_TENANT_ID: '7f429a9a-bd6a-4c3d-ac35-a100bd4644c8'
 
 stages:
+- stage: Code Coverage
+  displayName: Checking Code
+  jobs:
+  - job: lookingatcode
+    displayName: looking
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - task: TerraformInstaller@0
+      inputs:
+        terraformVersion: 'latest'
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: |
+          curl -L "$(curl -Ls https://api.github.com/repos/terraform-linters/tflint/releases/latest | grep -o -E "https://.+?_linux_amd64.zip")" -o tflint.zip && unzip tflint.zip && rm tflint.zip
+          tflint
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: 'terraform fmt -check -recursive'
+    - task: TerraformCLI@0
+      inputs:
+        command: 'validate'
+        allowTelemetryCollection: true
+
 - stage: Build
   displayName: Build image
   jobs:  
@@ -57,6 +83,7 @@ stages:
       inputs:
         targetType: 'inline'
         script: 'docker ps -a'
+
     - task: Bash@3
       inputs:
         targetType: 'inline'
