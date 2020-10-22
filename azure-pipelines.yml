@@ -20,15 +20,15 @@ variables:
   ARM_TENANT_ID: '7f429a9a-bd6a-4c3d-ac35-a100bd4644c8'
 
 stages:
-- stage: Code Coverage
-  displayName: Checking Code
+- stage: CodeCoverage
+  displayName: CheckingCode
   jobs:
   - job: lookingatcode
     displayName: looking
     pool:
       vmImage: 'ubuntu-latest'
     steps:
-    - task: TerraformInstaller@0
+    - task: charleszipp.azure-pipelines-tasks-terraform.azure-pipelines-tasks-terraform-installer.TerraformInstaller@0
       inputs:
         terraformVersion: 'latest'
     - task: Bash@3
