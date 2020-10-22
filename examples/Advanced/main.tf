@@ -43,7 +43,7 @@ module "vmwindows" {
     key_vault_resource_group  = "kv502857KeyVault"
     key_vault_name            = "kv502857"
     key_vault_secret_password = "Default-Admin-VM-Password"
-    } */
+    } 
   }
 
   // enable the IaaSAntiMalware extension.
