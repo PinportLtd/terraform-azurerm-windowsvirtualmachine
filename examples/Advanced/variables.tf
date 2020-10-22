@@ -10,12 +10,12 @@ variable "resourcegroupname" {
 
 
 variable "servernamesandcount" {
-    description = "Description"
-    default     = {
-        "foo" = 1
-        "bar" = 1
-    }
-  } 
+  description = "Description"
+  default = {
+    "foo" = 1
+    "bar" = 1
+  }
+}
 
 variable "taglist" {
   type        = map(string)

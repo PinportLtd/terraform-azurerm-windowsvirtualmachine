@@ -1,2 +1,2 @@
-rg        = "deathrace"
-location           = "uksouth"
+rg       = "deathrace"
+location = "uksouth"

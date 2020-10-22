@@ -38,14 +38,14 @@ data "azurerm_key_vault_secret" "secret_Default-Admin-VM-Password" {
 resource "azurerm_virtual_network" "main" {
   name                = "${var.resourcegroupname}-network"
   address_space       = local.lcidr
-  location            = var.location 
-  resource_group_name = var.resourcegroupname  
+  location            = var.location
+  resource_group_name = var.resourcegroupname
   tags                = var.taglist
 }
 
 resource "azurerm_subnet" "main" {
   name                 = var.network_subnet_name
-  resource_group_name  = var.resourcegroupname 
+  resource_group_name  = var.resourcegroupname
   virtual_network_name = azurerm_virtual_network.main.name
   address_prefixes     = [cidrsubnet(local.lcidr[0], 8, 1)]
 
@@ -62,8 +62,8 @@ resource "azurerm_subnet" "main" {
 resource "azurerm_network_interface" "main" {
   for_each            = toset(local.counting)
   name                = "${each.key}-NIC"
-  location            = var.location 
-  resource_group_name = var.resourcegroupname  
+  location            = var.location
+  resource_group_name = var.resourcegroupname
 
   ip_configuration {
     name                          = "configuration"
@@ -96,7 +96,7 @@ resource "azurerm_windows_virtual_machine" "windows" {
   for_each            = toset(local.counting)
   name                = each.key
   resource_group_name = var.resourcegroupname // azurerm_resource_group.main.name
-  location            = var.location // azurerm_resource_group.main.location
+  location            = var.location          // azurerm_resource_group.main.location
   size                = var.vmsize
   eviction_policy     = var.priority == "Spot" ? var.eviction_policy : null
   priority            = var.priority
@@ -170,7 +170,7 @@ resource "azurerm_managed_disk" "main" {
   for_each = ({ for disk in local.datadisk_lun_map : disk.datadisk_name => disk })
 
   name                 = each.key
-  location             = var.location // azurerm_resource_group.main.location
+  location             = var.location          // azurerm_resource_group.main.location
   resource_group_name  = var.resourcegroupname // azurerm_resource_group.main.name
   storage_account_type = each.value.storage_account_type
   create_option        = each.value.create_option
