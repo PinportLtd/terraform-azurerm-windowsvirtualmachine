@@ -102,7 +102,7 @@ stages:
         ARM_CLIENT_SECRET: $(clientsecret)
         ARM_TENANT_ID: $(ARM_TENANT_ID)
     - task: PowerShell@2
-      displayName: gci
+      displayName: gci ./test_output'
       inputs:
         targetType: 'inline'
         script: 'gci . -r'
