@@ -5,7 +5,7 @@ variable "location" {
 
 variable "resourcegroupname" {
   description = "The Resource Group Name."
-  default     = "DeathRace"
+  default     = "AResourceGroup"
 }
 
 variable "admin_password" {

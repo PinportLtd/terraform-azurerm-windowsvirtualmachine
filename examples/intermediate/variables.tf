@@ -5,13 +5,13 @@ variable "location" {
 
 variable "resourcegroupname" {
   description = "The Resource Group Name."
-  default     = "DeathRace"
+  default     = "AREsourceGroup"
 }
 
 variable "taglist" {
   type        = map(string)
   description = "This is the tags for the Virtual Machine."
   default = {
-    "Created By" = "Pinport Ltd"
+    "Created By" = "A Company"
   }
 }

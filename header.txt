@@ -1,0 +1,34 @@
+/** 
+* # terraform-azurerm-windowsvirtualmachine Module
+*
+* * This module will create a virtual machine or multiple virutal machines.
+* * You can set the name of the machines, and specify how many of them you want starting with each name. Check out the examples
+* * You will be able to use an existing key vault for the Administrator password or you can set it as a variable.
+* * It will setup the WinRM (Https) access to the virtual machine/s
+* * It has the ability to add mutliple certificates to the virutal machine/s.
+* * It has the ability to add Data Disk, all disks are set to the same size, that you specifiy
+* * It has the ability to add extensions on to the virtual machines. There are four extensions. IaaSAntiMalware, Custom Script, DSC Script, DSC Service. (DSC Script and DSC Service cannot be used together, it's one or the other.)
+* * Each VM gets a public IP address (Changing in V2)
+*
+*
+* ## Usage
+*
+* ``` hcl
+* module "vmwindows" {
+*   source            = "../../"
+*   location          = var.location
+*   resourcegroupname = var.resourcegroupname
+*   admin_password    = var.admin_password
+* }
+* ```
+*
+* ## Scenarios
+*
+* In the examples folder below I have created different scenarios, a simple, Intermediate and an Advanced example using the module.
+*
+* ## Examples
+*
+* https://github.com/PinportLtd/terraform-azurerm-windowsvirtualmachine/tree/master/examples
+*
+*
+*/

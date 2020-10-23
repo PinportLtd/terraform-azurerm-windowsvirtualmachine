@@ -273,7 +273,7 @@ variable "CustomScriptExt_commandToExecute" {
   default     = ""
 }
 variable "CustomScriptExt_filesUris" {
-  description = "The location URL of the script to run e.g. https://gist.githubusercontent.com/mcasperson/c815ac880df481418ff2e199ea1d0a46/raw/5d4fc583b28ecb27807d8ba90ec5f636387b00a3/chocolatey.ps1"
+  description = "The location URL of the script to run e.g. https://gist.githubusercontent.com/Russtym/29dd88d6b14af89a715646c73bd03c38/raw/61e9b904164a69344364976159b34f2a66f3b6ad/installchocolatey.ps1"
   default = [
 
   ]
@@ -294,7 +294,7 @@ variable "DSCScriptExt_configurationUrlSasToken" {
   default     = ""
 }
 variable "DSCScriptExt_Url" {
-  description = "The DSC Script URL of the zip file. e.g. https://te34rr364ysa367.blob.core.windows.net/dsccontainer/PowershellDSC.ps1.zip"
+  description = "The DSC Script URL of the zip file. e.g. https://f34rd364yga367.blob.core.windows.net/dsccontainer/PowershellDSC.ps1.zip"
   default     = ""
 }
 variable "DSCScriptExt_Name" {

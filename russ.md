@@ -1,3 +1,32 @@
+# terraform-azurerm-windowsvirtualmachine Module
+
+* This module will create a virtual machine or multiple virutal machines.
+* You can set the name of the machines, and specify how many of them you want starting with each name. Check out the examples
+* You will be able to use an existing key vault for the Administrator password or you can set it as a variable.
+* It will setup the WinRM (Https) access to the virtual machine/s
+* It has the ability to add mutliple certificates to the virutal machine/s.
+* It has the ability to add Data Disk, all disks are set to the same size, that you specifiy
+* It has the ability to add extensions on to the virtual machines. There are four extensions. IaaSAntiMalware, Custom Script, DSC Script, DSC Service. (DSC Script and DSC Service cannot be used together, it's one or the other.)
+
+## Usage
+
+``` hcl
+module "vmwindows" {
+  source            = "../../"
+  location          = var.location
+  resourcegroupname = var.resourcegroupname
+  admin_password    = var.admin_password
+}
+```
+
+## Scenarios
+
+In the examples folder below I have created different scenarios, a simple, Intermediate and an Advanced example using the module.
+
+## Examples
+
+https://github.com/PinportLtd/terraform-azurerm-windowsvirtualmachine/tree/master/examples
+
 ## Requirements
 
 No requirements.
@@ -13,10 +42,10 @@ No requirements.
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | CustomScriptExt\_commandToExecute | The Command to run e.g. powershell.exe -Command ./chocolatey.ps1; exit 0; . | `string` | `""` | no |
-| CustomScriptExt\_filesUris | The location URL of the script to run e.g. https://gist.githubusercontent.com/mcasperson/c815ac880df481418ff2e199ea1d0a46/raw/5d4fc583b28ecb27807d8ba90ec5f636387b00a3/chocolatey.ps1 | `list` | `[]` | no |
+| CustomScriptExt\_filesUris | The location URL of the script to run e.g. https://gist.githubusercontent.com/Russtym/29dd88d6b14af89a715646c73bd03c38/raw/61e9b904164a69344364976159b34f2a66f3b6ad/installchocolatey.ps1 | `list` | `[]` | no |
 | DSCScriptExt\_Function | The Function you want to run e.g. PowershellDSC | `string` | `""` | no |
 | DSCScriptExt\_Name | The Name of the Script you want to run. e.g. PowerShellDSC.ps1 | `string` | `""` | no |
-| DSCScriptExt\_Url | The DSC Script URL of the zip file. e.g. https://te34rr364ysa367.blob.core.windows.net/dsccontainer/PowershellDSC.ps1.zip | `string` | `""` | no |
+| DSCScriptExt\_Url | The DSC Script URL of the zip file. e.g. https://f34rd364yga367.blob.core.windows.net/dsccontainer/PowershellDSC.ps1.zip | `string` | `""` | no |
 | DSCScriptExt\_configurationUrlSasToken | The Configuration URL Sas Token, from the Storage account | `string` | `""` | no |
 | DSCScriptExt\_dataCollection | Description | `string` | `"enable"` | no |
 | DSCScriptExt\_forcePullAndApply | Description | `bool` | `false` | no |

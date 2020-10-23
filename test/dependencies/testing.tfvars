@@ -1,2 +1,2 @@
-rg       = "deathrace"
+rg       = "AResourceGroup"
 location = "uksouth"

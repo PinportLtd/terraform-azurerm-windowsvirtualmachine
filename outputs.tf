@@ -5,7 +5,7 @@ output "vm_names" {
 }
 
 output "resourcegroup" {
-  description = "The name of the resource group"
+  description = "The name of the resource Group."
   value       = [for rg in azurerm_windows_virtual_machine.windows : rg.resource_group_name]
 }
 
@@ -70,13 +70,3 @@ output "winrm_listener" {
   description = "The winrm URl of each vm."
   value       = { for name, id in azurerm_windows_virtual_machine.windows : id.name => id.winrm_listener }
 }
-
-/* output "allofvms" {
-  description = "Shows all of the settings for the VM's."
-  value = [azurerm_windows_virtual_machine.windows.*]
-} */
-/* output "allofpublicips" {
-  description = "Shows all of the settings for the public ip resources."
-  value = [azurerm_public_ip.main.*]
-} */
-
