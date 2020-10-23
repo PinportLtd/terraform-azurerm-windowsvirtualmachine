@@ -13,6 +13,7 @@ if [ "$SUBTRUE" -eq "true" ] -&& [ "$SUBID" -eq "$ARM_SUBSCRIPTION_ID" ] ; then
 
 # Run the tests
 cd ./test/
+mkdir test_output
 go test -v -timeout 30m | tee test_output.log
 terratest_log_parser -testlog test_output.log -outputdir test_output
 
