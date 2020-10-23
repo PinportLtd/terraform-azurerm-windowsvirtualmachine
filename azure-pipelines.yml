@@ -39,7 +39,7 @@ stages:
       displayName: gci
       inputs:
         targetType: 'inline'
-        script: 'gci . -r'
+        script:  Get-ChildItem -r -Directory | Where-Object { $_.GetFileSystemInfos().Count -eq 0 }
     - task: Bash@3
       displayName: Check format
       inputs:
