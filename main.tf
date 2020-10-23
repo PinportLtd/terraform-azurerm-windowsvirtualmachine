@@ -74,9 +74,9 @@ resource "azurerm_network_interface" "main" {
 resource "azurerm_public_ip" "main" {
   for_each            = toset(local.counting)
   name                = "${each.key}-PIP"
-  resource_group_name = var.resourcegroupname 
+  resource_group_name = var.resourcegroupname
   allocation_method   = "Static"
-  location            = var.location 
+  location            = var.location
   domain_name_label   = lower("${each.key}")
   tags                = var.taglist
 }
@@ -93,8 +93,8 @@ resource "azurerm_public_ip" "main" {
 resource "azurerm_windows_virtual_machine" "windows" {
   for_each            = toset(local.counting)
   name                = each.key
-  resource_group_name = var.resourcegroupname 
-  location            = var.location          
+  resource_group_name = var.resourcegroupname
+  location            = var.location
   size                = var.vmsize
   eviction_policy     = var.priority == "Spot" ? var.eviction_policy : null
   priority            = var.priority
@@ -169,8 +169,8 @@ resource "azurerm_managed_disk" "main" {
   for_each = ({ for disk in local.datadisk_lun_map : disk.datadisk_name => disk })
 
   name                 = each.key
-  location             = var.location          
-  resource_group_name  = var.resourcegroupname 
+  location             = var.location
+  resource_group_name  = var.resourcegroupname
   storage_account_type = each.value.storage_account_type
   create_option        = each.value.create_option
   disk_size_gb         = each.value.disk_size_gb

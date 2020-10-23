@@ -28,7 +28,7 @@ variable "taglist" {
   type        = map(string)
   description = "This is the tags for the project."
   default = {
-    
+
   }
 }
 
