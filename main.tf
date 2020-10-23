@@ -1,14 +1,7 @@
-// ##########################
-// Start of General resources
-
-
-// End of General resources
-// ########################
-
-
 
 // ############################
 // Start of Key Vault resources
+
 
 data "azurerm_resource_group" "rg_keyvault" {
   for_each = var.key_vault
@@ -27,13 +20,14 @@ data "azurerm_key_vault_secret" "secret_Default-Admin-VM-Password" {
   key_vault_id = data.azurerm_key_vault.keyvault[each.key].id
 }
 
+
 // End of Key Vault resources
 // ##########################
 
 
-
 // #############################
 // Start of Networking resources
+
 
 resource "azurerm_virtual_network" "main" {
   name                = "${var.resourcegroupname}-network"
@@ -43,6 +37,7 @@ resource "azurerm_virtual_network" "main" {
   tags                = var.taglist
 }
 
+
 resource "azurerm_subnet" "main" {
   name                 = var.network_subnet_name
   resource_group_name  = var.resourcegroupname
@@ -51,13 +46,14 @@ resource "azurerm_subnet" "main" {
 
 }
 
+
 // End of Networking resources
 // ###########################
 
 
-
 // ########################################
 // Start of Network and Public IP resources
+
 
 resource "azurerm_network_interface" "main" {
   for_each            = toset(local.counting)
@@ -74,29 +70,31 @@ resource "azurerm_network_interface" "main" {
   tags = var.taglist
 }
 
+
 resource "azurerm_public_ip" "main" {
   for_each            = toset(local.counting)
   name                = "${each.key}-PIP"
-  resource_group_name = var.resourcegroupname // azurerm_resource_group.main.name
+  resource_group_name = var.resourcegroupname 
   allocation_method   = "Static"
-  location            = var.location // azurerm_resource_group.main.location
+  location            = var.location 
   domain_name_label   = lower("${each.key}")
   tags                = var.taglist
 }
+
 
 // End of Network Card and Public IP resources
 // ###########################################
 
 
-
 // #################################
 // Start of Virtual Machine resource
+
 
 resource "azurerm_windows_virtual_machine" "windows" {
   for_each            = toset(local.counting)
   name                = each.key
-  resource_group_name = var.resourcegroupname // azurerm_resource_group.main.name
-  location            = var.location          // azurerm_resource_group.main.location
+  resource_group_name = var.resourcegroupname 
+  location            = var.location          
   size                = var.vmsize
   eviction_policy     = var.priority == "Spot" ? var.eviction_policy : null
   priority            = var.priority
@@ -158,25 +156,27 @@ resource "azurerm_windows_virtual_machine" "windows" {
 
 }
 
+
 // End of Virtual Machine resource
 // ###############################
-
 
 
 // ################################
 // Start of Managed Disks resources
 
+
 resource "azurerm_managed_disk" "main" {
   for_each = ({ for disk in local.datadisk_lun_map : disk.datadisk_name => disk })
 
   name                 = each.key
-  location             = var.location          // azurerm_resource_group.main.location
-  resource_group_name  = var.resourcegroupname // azurerm_resource_group.main.name
+  location             = var.location          
+  resource_group_name  = var.resourcegroupname 
   storage_account_type = each.value.storage_account_type
   create_option        = each.value.create_option
   disk_size_gb         = each.value.disk_size_gb
   tags                 = var.taglist
 }
+
 
 resource "azurerm_virtual_machine_data_disk_attachment" "main" {
   for_each           = ({ for attach in local.datadisk_lun_map : attach.datadisk_name => attach })
@@ -191,9 +191,9 @@ resource "azurerm_virtual_machine_data_disk_attachment" "main" {
 // ##############################
 
 
-
 // ###########################################################
 // Start of Virtual Machine IaaSAntimalware Extension resource
+
 
 resource "azurerm_virtual_machine_extension" "IaaSAntimalware" {
   for_each                   = var.enableIaaSAntiMalwareExtension == true ? toset(local.counting) : []
@@ -225,13 +225,14 @@ SETTINGS
   tags = var.taglist
 }
 
+
 // End of Virtual Machine IaaSAntimalware Extension resource
 // #########################################################
 
 
-
 // ########################################################
 // Start of Virtual Machine CustomScript Extension resource
+
 
 resource "azurerm_virtual_machine_extension" "CustomScript" {
   for_each                   = var.enableCustomScriptextension == true ? toset(local.counting) : []
@@ -258,13 +259,14 @@ resource "azurerm_virtual_machine_extension" "CustomScript" {
   tags = var.taglist
 }
 
+
 // End of Virtual Machine Custom Script Extension resource
 // #######################################################
 
 
-
 // ######################################################
 // Start of Virtual Machine DSC Script Extension resource
+
 
 resource "azurerm_virtual_machine_extension" "DSCScript" {
   for_each                   = (var.enableDSCScriptextension == true && var.enableDSCServiceextension == false) ? toset(local.counting) : []
@@ -302,13 +304,14 @@ resource "azurerm_virtual_machine_extension" "DSCScript" {
   tags = var.taglist
 }
 
+
 // End of Virtual Machine DSC Script Extension resource
 // ####################################################
 
 
-
 // #######################################################
 // Start of Virtual Machine DSC Service Extension resource
+
 
 resource "azurerm_virtual_machine_extension" "DSCService" {
   for_each                   = (var.enableDSCServiceextension == true && var.enableDSCScriptextension == false) ? toset(local.counting) : []
@@ -348,6 +351,7 @@ resource "azurerm_virtual_machine_extension" "DSCService" {
 
   tags = var.taglist
 }
+
 
 // End of Virtual Machine DSC Service Extension resource
 // #####################################################
