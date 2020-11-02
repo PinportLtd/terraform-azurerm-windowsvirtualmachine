@@ -31,7 +31,7 @@ stages:
     pool:
       vmImage: 'ubuntu-latest'
     steps:
-      - template: 'terraform-modules/codecoverage.yml@templates'
+      - template: 'Terraform-modules/codecoverage.yml@templates'
         parameters:
           SonarCloudOrganization: $(SonarCloudOrganization)
           cliProjectKey: $(cliProjectKey)
@@ -45,7 +45,7 @@ stages:
     pool:
       vmImage: 'ubuntu-latest'
     steps:
-      - template: 'terraform-modules/build.yml@templates'
+      - template: 'Terraform-modules/build.yml@templates'
         parameters:
           modulename: $(modulename)
           containerRegistryServiceConnectionName: $(containerRegistryServiceConnectionName)
@@ -65,5 +65,5 @@ stages:
     pool:
       vmImage: 'ubuntu-latest'
     steps:
-      - template: 'terraform-modules/report.yml@templates'
+      - template: 'Terraform-modules/report.yml@templates'
 
