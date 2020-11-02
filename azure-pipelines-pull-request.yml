@@ -6,8 +6,11 @@ pr:
      - main
      - master
 
-resources:  
- - repo: self
+resources:
+  repositories:
+    - repository: templates
+      type: git
+      name: ADOTemplates/PLTemplates
 
 variables:
   - name: tag
@@ -28,39 +31,11 @@ stages:
     pool:
       vmImage: 'ubuntu-latest'
     steps:
-    - task: SonarCloudPrepare@1
-      inputs:
-        SonarCloud: 'SonarCloud'
-        organization: $(SonarCloudOrganization)
-        scannerMode: 'CLI'
-        configMode: 'manual'
-        cliProjectKey: $(cliProjectKey)
-        cliProjectName: $(cliProjectName)
-        cliSources: '.'
-    - task: SonarCloudAnalyze@1
-    - task: SonarCloudPublish@1
-      inputs:
-        pollingTimeoutSec: '300'
-    - task: charleszipp.azure-pipelines-tasks-terraform.azure-pipelines-tasks-terraform-installer.TerraformInstaller@0
-      inputs:
-        terraformVersion: 'latest'
-    - task: Bash@3
-      displayName: Linting
-      inputs:
-        targetType: 'inline'
-        script: |
-          curl -L "$(curl -Ls https://api.github.com/repos/terraform-linters/tflint/releases/latest | grep -o -E "https://.+?_linux_amd64.zip")" -o tflint.zip && unzip tflint.zip && rm tflint.zip
-          ./tflint
-    - task: PowerShell@2
-      displayName: gci
-      inputs:
-        targetType: 'inline'
-        script:  Get-ChildItem -r -Directory | Where-Object { $_.GetFileSystemInfos().Count -eq 0 }
-    - task: Bash@3
-      displayName: Check format
-      inputs:
-        targetType: 'inline'
-        script: 'terraform fmt -check -recursive'
+      - template: 'terraform-modules/codecoverage.yml@templates'
+        parameters:
+          SonarCloudOrganization: $(SonarCloudOrganization)
+          cliProjectKey: $(cliProjectKey)
+          cliProjectName: $(cliProjectName)
         
 - stage: Build
   displayName: Build image
@@ -70,57 +45,25 @@ stages:
     pool:
       vmImage: 'ubuntu-latest'
     steps:
-    
-    - task: Docker@2
-      displayName: Build an image
-      inputs:
-        command: build
-        repository: $(modulename)
-        containerRegistry: $(containerRegistryServiceConnectionName)
-        dockerfile: $(dockerfile)
-        arguments: '--build-arg BUILD_MODULE_NAME=$(modulename)'
-        tags: |
-          $(tag)
-    - task: Bash@3
-      displayName: mkdir
-      inputs:
-        targetType: 'inline'
-        script: 'mkdir ./test_output'
-    - task: PowerShell@2
-      displayName: gci
-      inputs:
-        targetType: 'inline'
-        script: 'gci . -r'
-    - task: PowerShell@2
-      displayName: docker images
-      inputs:
-        targetType: 'inline'
-        script: 'docker images'
+      - template: 'terraform-modules/build.yml@templates'
+        parameters:
+          modulename: $(modulename)
+          containerRegistryServiceConnectionName: $(containerRegistryServiceConnectionName)
+          dockerfile: $(dockerfile)
+          tag: $(tag)
+          ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+          ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+          clientsecret: $(clientsecret)
+          ARM_TENANT_ID: $(ARM_TENANT_ID)
+          azurecontainerRegistry: $(azurecontainerRegistry)
+  
+- stage: Report
+  displayName: ReportOn
+  jobs:  
+  - job: RunReports
+    displayName: Run Reports
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+      - template: 'terraform-modules/report.yml@templates'
 
-    - task: Bash@3
-      inputs:
-        targetType: 'inline'
-        script: |
-            docker run \
-              -e ARM_SUBSCRIPTION_ID=$(ARM_SUBSCRIPTION_ID) \
-              -e ARM_CLIENT_ID=$(ARM_CLIENT_ID) \
-              -e ARM_CLIENT_SECRET=$(clientsecret) \
-              -e ARM_TENANT_ID=$(ARM_TENANT_ID) \
-              -v "$(System.DefaultWorkingDirectory)/test_output:/go/src/$(modulename)/test/test_output" \
-              $(azurecontainerRegistry)/$(modulename):$(tag)
-      displayName: Run tests in container
-      env:
-        ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
-        ARM_CLIENT_ID: $(ARM_CLIENT_ID)
-        ARM_CLIENT_SECRET: $(clientsecret)
-        ARM_TENANT_ID: $(ARM_TENANT_ID)
-    - task: PowerShell@2
-      displayName: gci ./test_output'
-      inputs:
-        targetType: 'inline'
-        script: 'gci . -r'
-    - task: PublishTestResults@2
-      inputs:
-        testResultsFormat: 'JUnit' # Options: JUnit, NUnit, VSTest, xUnit, cTest
-        testResultsFiles: '**/report.xml'
-        failTaskOnFailedTests: true
