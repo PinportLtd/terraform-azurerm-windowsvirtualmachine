@@ -37,33 +37,33 @@ stages:
           cliProjectKey: $(cliProjectKey)
           cliProjectName: $(cliProjectName)
         
-- stage: Build
-  displayName: Build image
-  jobs:  
-  - job: Build
-    displayName: Build
-    pool:
-      vmImage: 'ubuntu-latest'
-    steps:
-      - template: 'Terraform-modules/build.yml@templates'
-        parameters:
-          modulename: $(modulename)
-          containerRegistryServiceConnectionName: $(containerRegistryServiceConnectionName)
-          dockerfile: $(dockerfile)
-          tag: $(tag)
-          ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
-          ARM_CLIENT_ID: $(ARM_CLIENT_ID)
-          clientsecret: $(clientsecret)
-          ARM_TENANT_ID: $(ARM_TENANT_ID)
-          azurecontainerRegistry: $(azurecontainerRegistry)
+# - stage: Build
+#   displayName: Build image
+#   jobs:  
+#   - job: Build
+#     displayName: Build
+#     pool:
+#       vmImage: 'ubuntu-latest'
+#     steps:
+#       - template: 'Terraform-modules/build.yml@templates'
+#         parameters:
+#           modulename: $(modulename)
+#           containerRegistryServiceConnectionName: $(containerRegistryServiceConnectionName)
+#           dockerfile: $(dockerfile)
+#           tag: $(tag)
+#           ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+#           ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+#           clientsecret: $(clientsecret)
+#           ARM_TENANT_ID: $(ARM_TENANT_ID)
+#           azurecontainerRegistry: $(azurecontainerRegistry)
   
-- stage: Report
-  displayName: ReportOn
-  jobs:  
-  - job: RunReports
-    displayName: Run Reports
-    pool:
-      vmImage: 'ubuntu-latest'
-    steps:
-      - template: 'Terraform-modules/report.yml@templates'
+# - stage: Report
+#   displayName: ReportOn
+#   jobs:  
+#   - job: RunReports
+#     displayName: Run Reports
+#     pool:
+#       vmImage: 'ubuntu-latest'
+#     steps:
+#       - template: 'Terraform-modules/report.yml@templates'
 
