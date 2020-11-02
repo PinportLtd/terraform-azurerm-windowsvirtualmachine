@@ -31,7 +31,7 @@ stages:
     - task: SonarCloudPrepare@1
       inputs:
         SonarCloud: 'SonarCloud'
-        organization: $(SonarCloudOrganisation)
+        organization: $(SonarCloudOrganization)
         scannerMode: 'CLI'
         configMode: 'manual'
         cliProjectKey: $(cliProjectKey)
