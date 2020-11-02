@@ -75,7 +75,7 @@ stages:
       displayName: Build an image
       inputs:
         command: build
-        repository: 'russ'
+        repository: $(modulename)
         containerRegistry: $(containerRegistryServiceConnectionName)
         dockerfile: $(dockerfile)
         arguments: '--build-arg BUILD_MODULE_NAME=$(modulename)'
@@ -107,7 +107,7 @@ stages:
               -e ARM_CLIENT_SECRET=$(clientsecret) \
               -e ARM_TENANT_ID=$(ARM_TENANT_ID) \
               -v "$(System.DefaultWorkingDirectory)/test_output:/go/src/$(modulename)/test/test_output" \
-              $(azurecontainerRegistry)/russ:$(tag)
+              $(azurecontainerRegistry)/$(modulename):$(tag)
       displayName: Run tests in container
       env:
         ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
