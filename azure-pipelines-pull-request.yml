@@ -31,7 +31,7 @@ stages:
     pool:
       vmImage: 'ubuntu-latest'
     steps:
-      - template: 'Terraform-modules/codecoverage.yml@templates'
+      - template: 'Terraform-modules/CodeCoverage.yml@templates'
         parameters:
           SonarCloudOrganization: $(SonarCloudOrganization)
           cliProjectKey: $(cliProjectKey)
