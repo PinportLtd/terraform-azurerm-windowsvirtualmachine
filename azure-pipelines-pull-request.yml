@@ -21,15 +21,17 @@ variables:
     value: '$(Build.SourcesDirectory)/Dockerfile'
   - group: Allpipes
 
-
+pool:
+  vmImage: 'ubuntu-latest'
+  
 stages:
 - stage: CodeCoverage
   displayName: Analyse Code
   jobs:
   - job: CodeCoverage
     displayName: Analyse code for potential errors
-    pool:
-      vmImage: 'ubuntu-latest'
+#    pool:
+#      vmImage: 'ubuntu-latest'
     steps:
       - template: 'Terraform-modules/CodeCoverage.yml@templates'
         parameters:
