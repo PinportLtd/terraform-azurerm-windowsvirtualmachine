@@ -45,7 +45,7 @@ stages:
     pool:
       vmImage: 'ubuntu-latest'
     steps:
-      - template: 'Terraform-modules/build.yml@templates'
+      - template: 'Terraform-modules/Build.yml@templates'
         parameters:
           modulename: $(modulename)
           containerRegistryServiceConnectionName: $(containerRegistryServiceConnectionName)
@@ -65,5 +65,5 @@ stages:
     pool:
       vmImage: 'ubuntu-latest'
     steps:
-      - template: 'Terraform-modules/report.yml@templates'
+      - template: 'Terraform-modules/Report.yml@templates'
 
